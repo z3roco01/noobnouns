@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import z3roco01.noobnouns.command.NoobnounsCommands;
 
 public class Noobnouns implements ModInitializer {
 	public static final String MOD_ID = "noobnouns";
@@ -13,5 +14,7 @@ public class Noobnouns implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("noob vs pro vs hacker vs god nouns battle");
+
+        NoobnounsCommands.register();
 	}
 }
