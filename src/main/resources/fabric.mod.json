@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "noobnouns",
+	"version": "${version}",
+	"name": "noobnouns",
+	"description": "A server side mod that adds pronouns to the game",
+	"authors": [
+		"z3roco01"
+	],
+	"contact": {
+		"sources": "https://github.com/z3roco01/noobnouns"
+	},
+	"license": "GPL-3.0",
+	"icon": "assets/noobnouns/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"z3roco01.noobnouns.Noobnouns"
+		]
+	},
+	"mixins": [
+		"noobnouns.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
