@@ -1,9 +1,11 @@
 package z3roco01.noobnouns.command;
 
+import com.google.gson.Gson;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
-import net.minecraft.text.Text;
+import z3roco01.noobnouns.Noobnouns;
+import z3roco01.noobnouns.PronounStore;
 import z3roco01.noobnouns.util.StringUtil;
 
 public class NoobnounsCommands {
@@ -14,10 +16,11 @@ public class NoobnounsCommands {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(CommandManager.literal("pronouns")
                     .then(CommandManager.literal("set")
-                            .then(CommandManager.argument("pronouns", StringArgumentType.string()).executes(ctx -> {
+                            .then(CommandManager.argument("pronouns", StringArgumentType.greedyString()).executes(ctx -> {
                                 String pronouns = StringUtil.sterilise(StringArgumentType.getString(ctx, "pronouns"));
 
-                                ctx.getSource().sendFeedback(() -> Text.of(pronouns), false);
+                                PronounStore.setPronouns(ctx.getSource().getPlayer(), pronouns);
+                                Noobnouns.LOGGER.info(new Gson().toJson(PronounStore.pronounMap));
 
                                 return 1;
                             }))
