@@ -17,25 +17,56 @@ import java.util.UUID;
 /**
  * Holds the pronouns for all players
  */
-public class PronounStore {
+public class NounStore {
     private static final File jsonFile = new File("./pronouns.json");
     /**
      * Maps a players UUID tho their pronouns
      */
-    public static final HashMap<UUID, String> pronounMap = new HashMap<>();
+    private static final HashMap<UUID, Nouns> nounMap = new HashMap<>();
+
+    /**
+     * Gets or creates a new Nouns object for this player
+     */
+    private static Nouns getOrCreate(PlayerEntity player) {
+        UUID uuid = player.getUuid();
+        if(!nounMap.containsKey(uuid))
+            nounMap.put(uuid, new Nouns("", ""));
+
+        return nounMap.get(uuid);
+    }
 
     /**
      * Sets a players pronouns with the player object instead of raw uuid
      */
     public static void setPronouns(PlayerEntity player, String pronouns) {
-        pronounMap.put(player.getUuid(), pronouns);
+        Noobnouns.LOGGER.info(new Gson().toJson(NounStore.nounMap));
+        getOrCreate(player).pronouns = pronouns;
     }
 
     /**
      * Gets a players pronouns with the player object
      */
     public static String getPronouns(PlayerEntity player) {
-        return pronounMap.getOrDefault(player.getUuid(), "");
+        return getOrCreate(player).pronouns;
+    }
+
+    /**
+     * Sets a players name with the player object instead of raw uuid
+     */
+    public static void setName(PlayerEntity player, String name) {
+        getOrCreate(player).name = name;
+    }
+
+    /**
+     * Gets a players name with the player object
+     */
+    public static String getName(PlayerEntity player) {
+        String name = getOrCreate(player).name;
+        // if there name would be empty, return their accounts name
+        if(name.isBlank())
+            return player.getGameProfile().name();
+
+        return name;
     }
 
     /**
@@ -83,7 +114,7 @@ public class PronounStore {
     private static void saveToFile() throws IOException {
         FileWriter writer = new FileWriter(jsonFile);
         // write it then save it
-        writer.write(new Gson().toJson(pronounMap));
+        writer.write(new Gson().toJson(nounMap));
 
         writer.close();
     }
@@ -96,8 +127,21 @@ public class PronounStore {
         String contents = new String(Files.readAllBytes(jsonFile.toPath()));
 
         // type needed for parsing json maps
-        Type type = new TypeToken<Map<UUID, String>>(){}.getType();
-        pronounMap.clear();
-        pronounMap.putAll(new Gson().fromJson(contents, type));
+        Type type = new TypeToken<Map<UUID, Nouns>>(){}.getType();
+        nounMap.clear();
+        nounMap.putAll(new Gson().fromJson(contents, type));
+    }
+
+    /**
+     * Object to store players name and pronouns, used for serializiation
+     */
+    static class Nouns {
+        public String name;
+        public String pronouns;
+
+        public Nouns(String name, String pronouns) {
+            this.name = name;
+            this.pronouns = pronouns;
+        }
     }
 }

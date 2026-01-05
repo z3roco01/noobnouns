@@ -1,11 +1,12 @@
 package z3roco01.noobnouns.command;
 
-import com.google.gson.Gson;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
 import z3roco01.noobnouns.Noobnouns;
-import z3roco01.noobnouns.PronounStore;
+import z3roco01.noobnouns.NounStore;
 import z3roco01.noobnouns.util.StringUtil;
 
 public class NoobnounsCommands {
@@ -14,18 +15,43 @@ public class NoobnounsCommands {
      */
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(CommandManager.literal("pronouns")
-                    .then(CommandManager.literal("set")
+            dispatcher.register(CommandManager.literal("nouns")
+                    .then(CommandManager.literal("pronouns")
+                            .executes(ctx -> {
+                                // show them their prns if they didnt put them in
+                                ServerCommandSource source = ctx.getSource();
+                                source.sendFeedback(() -> Text.of("your pronouns are : " + NounStore.getPronouns(source.getPlayer())), false);
+
+                                return 1;
+                            })
                             .then(CommandManager.argument("pronouns", StringArgumentType.greedyString()).executes(ctx -> {
                                 String pronouns = StringUtil.sterilise(StringArgumentType.getString(ctx, "pronouns"));
 
-                                PronounStore.setPronouns(ctx.getSource().getPlayer(), pronouns);
-                                Noobnouns.LOGGER.info(new Gson().toJson(PronounStore.pronounMap));
+                                NounStore.setPronouns(ctx.getSource().getPlayer(), pronouns);
 
                                 return 1;
                             }))
                     )
             );
+
+            // only register if theyre allowed to set their name
+            if(Noobnouns.config.namesAllowed) {
+                    dispatcher.register(CommandManager.literal("nouns").then(CommandManager.literal("name")
+                            .executes(ctx -> {
+                                ServerCommandSource source = ctx.getSource();
+                                source.sendFeedback(() -> Text.of("your name is : " + NounStore.getName(source.getPlayer())), false);
+
+                                return 1;
+                            })
+                            .then(CommandManager.argument("name", StringArgumentType.greedyString()).executes(ctx -> {
+                                String name = StringUtil.sterilise(StringArgumentType.getString(ctx, "name"));
+
+                                NounStore.setName(ctx.getSource().getPlayer(), name);
+
+                                return 1;
+                            }))
+                    ));
+            }
         });
     }
 }

@@ -26,7 +26,7 @@ public class Noobnouns implements ModInitializer {
             throw new RuntimeException(e);
         }
 
-        PronounStore.registerFileEvents();
+        NounStore.registerFileEvents();
         NoobnounsCommands.register();
 	}
 }
