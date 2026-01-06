@@ -1,6 +1,5 @@
 package z3roco01.noobnouns.mixin;
 
-import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.ContainerUser;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -9,7 +8,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -38,19 +36,5 @@ public abstract class PlayerEntityMixin extends PlayerLikeEntity implements Cont
         name = name.replace("%p", NounStore.getPronouns(player));
 
         cir.setReturnValue(Text.of(name));
-    }
-
-    @Inject(method = "getStringifiedName", at = @At("RETURN"), cancellable = true)
-    private void getStringifiedName(CallbackInfoReturnable<String> cir) {
-        if(getEntityWorld().isClient()) return;
-
-        cir.setReturnValue(NounStore.getName((PlayerEntity)(Object)this));
-    }
-
-    @Inject(method = "getNameForScoreboard", at = @At("RETURN"), cancellable = true)
-    private void getNameForScoreboard(CallbackInfoReturnable<String> cir) {
-        if(getEntityWorld().isClient()) return;
-
-        cir.setReturnValue(NounStore.getName((PlayerEntity)(Object)this));
     }
 }
