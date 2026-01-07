@@ -133,6 +133,21 @@ public class NounStore {
     }
 
     /**
+     * Applies formatting for different nouns, replaces certain string in the original string
+     */
+    public static String applyFormat(String format, PlayerEntity player) {
+        String formatted = format;
+
+        formatted = formatted.replace("%n", getName(player));
+        // add in their pronouns
+        formatted = formatted.replace("%p", getPronouns(player));
+        // add in their userformatting if wanted
+        formatted = formatted.replace("%u", player.getGameProfile().name());
+
+        return formatted;
+    }
+
+    /**
      * Object to store players name and pronouns, used for serializiation
      */
     static class Nouns {

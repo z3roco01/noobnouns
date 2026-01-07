@@ -13,7 +13,8 @@ public class NoobnounsCommands {
      * Registers commands for the mod
      */
     public static void register() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(CommandManager.literal("nouns")
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+                dispatcher.register(CommandManager.literal("nouns")
                 .then(CommandManager.literal("pronouns")
                         .executes(ctx -> {
                             // show them their prns if they didnt put them in
@@ -32,6 +33,7 @@ public class NoobnounsCommands {
                 .then(CommandManager.literal("name").executes(ctx -> {
                     ServerCommandSource source = ctx.getSource();
                     source.sendFeedback(() -> Text.of("§7your name is: §r" + NounStore.getName(source.getPlayer())), false);
+                    source.getPlayer().setCustomName(Text.of("wassup"));
 
                     return 1;
                 })

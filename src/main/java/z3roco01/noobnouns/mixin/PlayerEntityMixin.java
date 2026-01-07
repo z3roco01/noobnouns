@@ -31,18 +31,8 @@ public abstract class PlayerEntityMixin extends PlayerLikeEntity implements Cont
         // idk if this is needed, but wtv
         if(getEntityWorld().isClient()) return;
 
-        String name = Noobnouns.config.formattingString;
-        String username = getGameProfile().name();
+        String formattedName = NounStore.applyFormat(Noobnouns.config.formattingString, (PlayerEntity)(Object)this);
 
-        PlayerEntity player = (PlayerEntity)(Object)this;
-
-        // add in the actual name
-        name = name.replace("%n", NounStore.getName(player));
-        // add in their pronouns
-        name = name.replace("%p", NounStore.getPronouns(player));
-        // add in their username if wanted
-        name = name.replace("%u", username);
-
-        cir.setReturnValue(Text.of(name));
+        cir.setReturnValue(Text.of(formattedName));
     }
 }
