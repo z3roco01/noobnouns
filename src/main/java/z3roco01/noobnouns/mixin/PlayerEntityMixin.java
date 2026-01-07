@@ -1,5 +1,6 @@
 package z3roco01.noobnouns.mixin;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.ContainerUser;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -8,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -16,6 +18,9 @@ import z3roco01.noobnouns.NounStore;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends PlayerLikeEntity implements ContainerUser {
+
+    @Shadow
+    public abstract GameProfile getGameProfile();
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -27,6 +32,7 @@ public abstract class PlayerEntityMixin extends PlayerLikeEntity implements Cont
         if(getEntityWorld().isClient()) return;
 
         String name = Noobnouns.config.formattingString;
+        String username = getGameProfile().name();
 
         PlayerEntity player = (PlayerEntity)(Object)this;
 
@@ -34,6 +40,8 @@ public abstract class PlayerEntityMixin extends PlayerLikeEntity implements Cont
         name = name.replace("%n", NounStore.getName(player));
         // add in their pronouns
         name = name.replace("%p", NounStore.getPronouns(player));
+        // add in their username if wanted
+        name = name.replace("%u", username);
 
         cir.setReturnValue(Text.of(name));
     }
