@@ -2,6 +2,7 @@ package z3roco01.noobnouns.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
@@ -21,7 +22,15 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 
     @Inject(method = "getPlayerListName", at = @At("RETURN"), cancellable = true)
     private void getPlayerListName(CallbackInfoReturnable<Text> cir) {
-        String formattedName = NounStore.applyFormat(Noobnouns.config.playerListFormat, (PlayerEntity)this);
-        cir.setReturnValue(Text.of(formattedName));
+        if(Noobnouns.CONFIG.playerListFormat.isBlank()) {
+            cir.setReturnValue(null);
+            return;
+        }
+
+        String formattedName = NounStore.applyFormat(Noobnouns.CONFIG.playerListFormat, this);
+        // add team colour
+        Text decoratedName = Team.decorateName(getScoreboardTeam(), Text.of(formattedName));
+
+        cir.setReturnValue(decoratedName);
     }
 }
