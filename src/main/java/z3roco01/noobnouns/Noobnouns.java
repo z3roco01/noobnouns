@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import z3roco01.composed.ConfigFile;
+import z3roco01.composed.file.ConfigFile;
 import z3roco01.noobnouns.command.NoobnounsCommands;
 
 import java.io.IOException;
