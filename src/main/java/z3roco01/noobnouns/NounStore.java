@@ -4,6 +4,8 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
+import z3roco01.noobnouns.util.PlayerListUtil;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -39,8 +41,8 @@ public class NounStore {
      * Sets a players pronouns with the player object instead of raw uuid
      */
     public static void setPronouns(PlayerEntity player, String pronouns) {
-        Noobnouns.LOGGER.info(new Gson().toJson(NounStore.nounMap));
         getOrCreate(player).pronouns = pronouns;
+        PlayerListUtil.updateName((ServerPlayerEntity) player);
     }
 
     /**
@@ -55,6 +57,7 @@ public class NounStore {
      */
     public static void setName(PlayerEntity player, String name) {
         getOrCreate(player).name = name;
+        PlayerListUtil.updateName((ServerPlayerEntity) player);
     }
 
     /**
