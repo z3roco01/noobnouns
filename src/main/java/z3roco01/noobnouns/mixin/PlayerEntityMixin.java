@@ -39,7 +39,7 @@ public abstract class PlayerEntityMixin extends Avatar implements ContainerUser 
 
     @Inject(method = "getDisplayName", at = @At("RETURN"), cancellable = true)
     private void getDisplayName(CallbackInfoReturnable<Component> cir) {
-        String formattedName = NounStore.applyFormat(Noobnouns.CONFIG.nametagFormat, (Player)(Object)this);
+        String formattedName = NounStore.applyFormat(Noobnouns.CONFIG.formattingString, (Player)(Object)this);
 
         cir.setReturnValue(decorateDisplayNameComponent(PlayerTeam.formatNameForTeam(getTeam(), Component.literal(formattedName))));
         cir.cancel();

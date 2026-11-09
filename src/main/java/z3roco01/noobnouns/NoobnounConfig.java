@@ -11,8 +11,4 @@ public class NoobnounConfig {
     @Comment(comment = "Just like formattingString, but it is how it will be displayed in the player list")
     @ConfigProperty
     public String playerListFormat = "%n§7(%u)§r";
-
-    @Comment(comment = "How the nickname should be displayed above the players head, defaults to just nickname")
-    @ConfigProperty
-    public String nametagFormat = "%n";
 }
