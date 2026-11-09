@@ -32,4 +32,5 @@ public abstract class ServerPlayerEntityMixin extends Player {
 
         cir.setReturnValue(decoratedName);
     }
+
 }
