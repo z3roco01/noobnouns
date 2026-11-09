@@ -3,8 +3,8 @@ package z3roco01.noobnouns;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import z3roco01.noobnouns.util.PlayerListUtil;
 
 import java.io.File;
@@ -29,8 +29,8 @@ public class NounStore {
     /**
      * Gets or creates a new Nouns object for this player
      */
-    private static Nouns getOrCreate(PlayerEntity player) {
-        UUID uuid = player.getUuid();
+    private static Nouns getOrCreate(Player player) {
+        UUID uuid = player.getUUID();
         if(!nounMap.containsKey(uuid))
             nounMap.put(uuid, new Nouns("", ""));
 
@@ -40,30 +40,30 @@ public class NounStore {
     /**
      * Sets a players pronouns with the player object instead of raw uuid
      */
-    public static void setPronouns(PlayerEntity player, String pronouns) {
+    public static void setPronouns(Player player, String pronouns) {
         getOrCreate(player).pronouns = pronouns;
-        PlayerListUtil.updateName((ServerPlayerEntity) player);
+        PlayerListUtil.updateName((ServerPlayer) player);
     }
 
     /**
      * Gets a players pronouns with the player object
      */
-    public static String getPronouns(PlayerEntity player) {
+    public static String getPronouns(Player player) {
         return getOrCreate(player).pronouns;
     }
 
     /**
      * Sets a players name with the player object instead of raw uuid
      */
-    public static void setName(PlayerEntity player, String name) {
+    public static void setName(Player player, String name) {
         getOrCreate(player).name = name;
-        PlayerListUtil.updateName((ServerPlayerEntity) player);
+        PlayerListUtil.updateName((ServerPlayer) player);
     }
 
     /**
      * Gets a players name with the player object
      */
-    public static String getName(PlayerEntity player) {
+    public static String getName(Player player) {
         String name = getOrCreate(player).name;
         // if there name would be empty, return their accounts name
         if(name.isBlank())
@@ -138,7 +138,7 @@ public class NounStore {
     /**
      * Applies formatting for different nouns, replaces certain string in the original string
      */
-    public static String applyFormat(String format, PlayerEntity player) {
+    public static String applyFormat(String format, Player player) {
         String formatted = format;
 
         formatted = formatted.replace("%n", getName(player));
